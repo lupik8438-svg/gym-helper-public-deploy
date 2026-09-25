@@ -54,3 +54,7 @@ LocalTunnel подходит только для короткого теста. 
 ## Если Render пишет `metadata-generation-failed` для `pydantic-core`
 
 Это возникает из-за старого ограничения `pydantic<2.6`, для которого pip пытается собрать несовместимый `pydantic-core`. Ограничение обновлено до `pydantic>=2.10,<3`, где для Python 3.12 используется готовый wheel. В Render снова выбери **Manual Deploy → Clear build cache & deploy**.
+
+## Если Render пишет `ResolutionImpossible`
+
+Старый `aiogram==3.4.1` требовал `pydantic<2.6`, а новая Pillow/Render-сборка требовала более новый Pydantic. Это взаимоисключающие ограничения. Зависимости синхронизированы: `aiogram==3.30.0` + `pydantic>=2.12,<2.13`; для Python 3.12 доступны готовые wheels. В Render запускай **Manual Deploy → Clear build cache & deploy**.
