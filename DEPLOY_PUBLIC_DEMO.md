@@ -62,3 +62,7 @@ LocalTunnel подходит только для короткого теста. 
 ## Если лог показывает Python 3.14 и ошибку SQLAlchemy `TypingOnly`
 
 Render запустил старое окружение на Python 3.14, а старый SQLAlchemy падал при импорте. В Blueprint теперь явно задан `PYTHON_VERSION=3.12.8`, а SQLAlchemy обновлён до совместимой версии. После изменения Blueprint требуется **Clear build cache & deploy**; в логах запуска должна появиться Python 3.12, а не Python 3.14.
+
+## Если Render пишет `No module named 'psycopg'`
+
+SQLAlchemy 2.1 выбирает драйвер `psycopg` для обычного URL PostgreSQL, а в проекте установлен `psycopg2-binary`. В конфигурации URL Render теперь автоматически преобразуется в `postgresql+psycopg2://`, поэтому отдельный пакет `psycopg` не нужен.

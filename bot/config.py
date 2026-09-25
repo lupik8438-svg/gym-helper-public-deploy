@@ -13,6 +13,12 @@ _default_db = _project_root / 'fitness_bot.db'
 DATABASE_URL = os.getenv('DATABASE_URL', f'sqlite:///{_default_db}')
 if DATABASE_URL.startswith('sqlite:///./'):
     DATABASE_URL = f"sqlite:///{_project_root / DATABASE_URL.replace('sqlite:///./', '')}"
+# SQLAlchemy 2.1 defaults PostgreSQL URLs to psycopg (v3). Render installs
+# psycopg2-binary, so make the driver explicit for both postgres URL spellings.
+if DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = 'postgresql+psycopg2://' + DATABASE_URL[len('postgres://'):]
+elif DATABASE_URL.startswith('postgresql://'):
+    DATABASE_URL = 'postgresql+psycopg2://' + DATABASE_URL[len('postgresql://'):]
 
 # DeepSeek AI for text and food-photo analysis.
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', '').strip()
