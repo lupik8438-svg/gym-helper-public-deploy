@@ -58,3 +58,7 @@ LocalTunnel подходит только для короткого теста. 
 ## Если Render пишет `ResolutionImpossible`
 
 Старый `aiogram==3.4.1` требовал `pydantic<2.6`, а новая Pillow/Render-сборка требовала более новый Pydantic. Это взаимоисключающие ограничения. Зависимости синхронизированы: `aiogram==3.30.0` + `pydantic>=2.12,<2.13`; для Python 3.12 доступны готовые wheels. В Render запускай **Manual Deploy → Clear build cache & deploy**.
+
+## Если лог показывает Python 3.14 и ошибку SQLAlchemy `TypingOnly`
+
+Render запустил старое окружение на Python 3.14, а старый SQLAlchemy падал при импорте. В Blueprint теперь явно задан `PYTHON_VERSION=3.12.8`, а SQLAlchemy обновлён до совместимой версии. После изменения Blueprint требуется **Clear build cache & deploy**; в логах запуска должна появиться Python 3.12, а не Python 3.14.
