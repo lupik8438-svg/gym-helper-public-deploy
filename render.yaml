@@ -16,6 +16,8 @@ services:
           property: connectionString
       - key: PUBLIC_DEMO_MODE
         value: "False"
+      - key: PUBLIC_SITE_URL
+        value: "https://gym-helper-public-site.onrender.com"
       - key: DEBUG
         value: "False"
       - key: ADMIN_KEY
@@ -43,6 +45,10 @@ services:
         value: "False"
       - key: REQUIRE_WEBAPP_AUTH
         value: "True"
+      - key: WEBAPP_PUBLIC_URL
+        value: "https://gym-helper-mini-app.onrender.com"
+      - key: PUBLIC_SITE_URL
+        value: "https://gym-helper-public-site.onrender.com"
       - key: BOT_TOKEN
         sync: false
       - key: OPENAI_API_KEY

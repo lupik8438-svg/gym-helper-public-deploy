@@ -1,11 +1,13 @@
 """Единый слой данных для Telegram-бота, Mini App, сайта и админ-аналитики."""
 import json
+import hashlib
+import secrets
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional
 
 from database.connection import SessionLocal
-from database.models import FoodLog, Profile, TrainingSession, User, UserEvent, WeightHistory
+from database.models import FoodLog, Profile, SiteAccessCode, TrainingSession, User, UserEvent, WeightHistory
 
 
 def _month_key(value: datetime) -> str:
@@ -22,6 +24,57 @@ def _month_range(months: int = 12) -> List[str]:
         if month == 0:
             month, year = 12, year - 1
     return list(reversed(result))
+
+
+# ===== WEBSITE ACCESS =====
+
+def normalize_phone(phone: str) -> str:
+    digits = ''.join(ch for ch in str(phone or '') if ch.isdigit())
+    # Telegram may return a Russian number as 8XXXXXXXXXX while a website user types +7.
+    if len(digits) == 11 and digits.startswith('8'):
+        digits = '7' + digits[1:]
+    return digits
+
+
+def create_site_access_code(user_id: int, phone_number: str, ttl_minutes: int = 10):
+    code = f"{secrets.randbelow(1_000_000):06d}"
+    now = datetime.utcnow()
+    db = SessionLocal()
+    try:
+        db.query(SiteAccessCode).filter(
+            SiteAccessCode.user_id == user_id, SiteAccessCode.used_at.is_(None)
+        ).update({'used_at': now})
+        record = SiteAccessCode(
+            user_id=user_id, phone_number=normalize_phone(phone_number),
+            code_hash=hashlib.sha256(code.encode()).hexdigest(),
+            expires_at=now + timedelta(minutes=ttl_minutes),
+        )
+        db.add(record)
+        db.commit()
+        return code, record.expires_at
+    finally:
+        db.close()
+
+
+def verify_site_access_code(phone_number: str, code: str):
+    phone = normalize_phone(phone_number)
+    code_hash = hashlib.sha256(str(code or '').strip().encode()).hexdigest()
+    now = datetime.utcnow()
+    db = SessionLocal()
+    try:
+        record = db.query(SiteAccessCode).filter(
+            SiteAccessCode.phone_number == phone,
+            SiteAccessCode.code_hash == code_hash,
+            SiteAccessCode.used_at.is_(None),
+            SiteAccessCode.expires_at > now,
+        ).order_by(SiteAccessCode.created_at.desc()).first()
+        if not record:
+            return None
+        record.used_at = now
+        db.commit()
+        return record.user_id
+    finally:
+        db.close()
 
 
 # ===== USERS =====

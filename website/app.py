@@ -4,20 +4,24 @@ import hmac
 import os
 import sys
 
-from flask import Flask, jsonify, render_template, request, Response
+from flask import Flask, jsonify, render_template, request, Response, session
 
 # Shared project imports regardless of launch directory.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from bot.config import ADMIN_KEY
+from bot.config import ADMIN_KEY, ADMIN_SESSION_SECRET
 from core.calculators.bmi import calculate_bmi
 from core.calculators.calories import calculate_full_nutrition
 from core.calculators.supplements import calculate_supplement_recommendations
 from core.workout_programs import WORKOUT_PROGRAMS
 from database.connection import init_db
-from database.crud import get_admin_overview, get_admin_users, get_user_dashboard
+from database.crud import get_admin_overview, get_admin_users, get_user_dashboard, get_user, get_profile, verify_site_access_code
 
 app = Flask(__name__)
+app.secret_key = ADMIN_SESSION_SECRET or os.urandom(32)
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 init_db()
 
 
@@ -29,6 +33,43 @@ def healthz():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+@app.route('/account')
+def account():
+    if not session.get('site_user_id'):
+        return render_template('login.html')
+    return render_template('account.html')
+
+
+@app.route('/api/auth/verify', methods=['POST'])
+def verify_site_login():
+    data = request.get_json(silent=True) or {}
+    user_id = verify_site_access_code(data.get('phone', ''), data.get('code', ''))
+    if not user_id:
+        return jsonify({'error': 'Неверный или просроченный код. Запроси новый код в Telegram.'}), 401
+    session.permanent = True
+    session['site_user_id'] = int(user_id)
+    return jsonify({'ok': True, 'redirect': '/account'})
+
+
+@app.route('/api/auth/me')
+def site_me():
+    user_id = session.get('site_user_id')
+    if not user_id:
+        return jsonify({'error': 'Нужен вход через Telegram'}), 401
+    return jsonify(get_user_dashboard(int(user_id), months=12))
+
+
+@app.route('/logout')
+def logout():
+    session.pop('site_user_id', None)
+    return render_template('login.html')
 
 
 @app.route('/calculator')

@@ -199,3 +199,16 @@ class FoodLog(Base):
     total_calories = Column(Float)
     confirmed = Column(Boolean, default=False)
     logged_at = Column(DateTime, default=datetime.utcnow)
+
+
+class SiteAccessCode(Base):
+    """One-time code sent by the Telegram bot for website login."""
+    __tablename__ = 'site_access_codes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, ForeignKey('users.user_id'), index=True)
+    phone_number = Column(String(32), index=True)
+    code_hash = Column(String(64), nullable=False)
+    expires_at = Column(DateTime, nullable=False, index=True)
+    used_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

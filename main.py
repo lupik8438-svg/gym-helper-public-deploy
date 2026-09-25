@@ -7,7 +7,7 @@ from aiogram.types import MenuButtonWebApp, WebAppInfo
 
 from bot.config import BOT_TOKEN, WEBAPP_PUBLIC_URL
 from database.connection import init_db
-from bot.handlers import start, registration, calculators, food_scanner, profile, help, control, programs, management
+from bot.handlers import start, registration, calculators, food_scanner, profile, help, control, programs, management, site_access
 
 # Настройка логирования
 logging.basicConfig(
@@ -48,6 +48,7 @@ async def main():
     dp.include_router(start.router)
     dp.include_router(control.router)
     dp.include_router(management.router)
+    dp.include_router(site_access.router)
     dp.include_router(programs.router)
     dp.include_router(help.router)
     dp.include_router(registration.router)
@@ -79,6 +80,7 @@ async def main():
             BotCommand(command='menu', description='Главное меню'),
             BotCommand(command='cancel', description='Отменить действие'),
             BotCommand(command='help', description='Помощь'),
+            BotCommand(command='site', description='Код входа на сайт'),
         ])
     except Exception as error:
         logger.warning('Не удалось установить меню команд: %s', error)

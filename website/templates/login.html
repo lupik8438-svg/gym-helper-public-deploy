@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#15211b"><title>Вход — Gym Helper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a>
+        <nav class="main-nav" aria-label="Основная навигация">
+            <a href="/" class="nav-link">Главная</a><a href="/calculator" class="nav-link">Калькуляторы</a>
+            <a href="/programs" class="nav-link">Тренировки</a><a href="/login" class="nav-link active">Войти</a>
+        </nav><button class="theme-toggle header-action" id="themeToggle" type="button" aria-label="Переключить тему">🌙</button>
+    </header>
+    <div class="container"><main>
+        <section class="page-hero reveal"><span class="eyebrow">Личный кабинет</span><h1>Вход без пароля.</h1><p>Открой бота, нажми «Управление → Код для сайта» или отправь команду <code>/site</code>, затем введи номер и одноразовый код.</p></section>
+        <section class="calculator-card auth-card reveal">
+            <div class="auth-steps"><span><b>1</b> Открой код в боте</span><span><b>2</b> Введи телефон</span><span><b>3</b> Получи кабинет</span></div>
+            <form id="phone-login-form">
+                <div class="form-grid"><div class="form-group"><label for="login-phone">Номер телефона</label><input id="login-phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 900 000-00-00" required></div><div class="form-group"><label for="login-code">Код из Telegram</label><input id="login-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="123456" required></div></div>
+                <div class="form-actions"><button type="submit" class="btn btn-dark">Войти в кабинет <span>↗</span></button><span class="form-hint">Код действует 10 минут и используется один раз.</span></div>
+            </form><div id="login-error" class="admin-error" role="alert"></div>
+        </section>
+        <section class="info-section auth-note"><h3>Если кода ещё нет</h3><p>В Telegram открой Gym Helper → <b>Управление</b> → <b>Код для сайта</b>. Номер телефона добавляется только через системную кнопку Telegram и может быть удалён в любой момент.</p><a class="btn btn-primary btn-small" href="https://t.me/gymhelperrussia_bot?start=site" target="_blank" rel="noopener">Открыть бота ↗</a></section>
+    </main><footer class="site-footer"><p>Один аккаунт для Telegram, Mini App и сайта.</p><div class="footer-links"><a href="/">Главная</a><a href="/programs">Тренировки</a></div></footer></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div><script src="{{ url_for('static', filename='js/login.js') }}"></script><script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body></html>

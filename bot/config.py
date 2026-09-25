@@ -21,6 +21,7 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # WEBAPP_URL is local URL for browser development. Telegram requires WEBAPP_PUBLIC_URL.
 WEBAPP_URL = os.getenv('WEBAPP_URL', 'http://localhost:8081')
 WEBAPP_PUBLIC_URL = os.getenv('WEBAPP_PUBLIC_URL', '').strip()
+PUBLIC_SITE_URL = os.getenv('PUBLIC_SITE_URL', '').strip()
 if WEBAPP_PUBLIC_URL and not WEBAPP_PUBLIC_URL.startswith(('http://', 'https://')):
     WEBAPP_PUBLIC_URL = f'https://{WEBAPP_PUBLIC_URL}'
 WEB_PORT = int(os.getenv('WEB_PORT', 8081))

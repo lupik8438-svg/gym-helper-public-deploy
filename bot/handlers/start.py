@@ -12,51 +12,45 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
-    """Обработчик команды /start"""
+    """Open the bot with a visual welcome and a mobile-first next action."""
     user_id = message.from_user.id
     first_name = message.from_user.first_name or 'друг'
-
-    # Очищаем состояние и проверяем общую базу пользователей.
     await state.clear()
     user = get_user(user_id)
+    hero = Path(__file__).resolve().parents[2] / 'website' / 'static' / 'images' / 'fitness-hero.jpg'
+
+    welcome_text = (
+        f"╭──────────────────╮\n"
+        f"│  👋 <b>ПРИВЕТ, {first_name.upper()}!</b>  │\n"
+        f"╰──────────────────╯\n\n"
+        "Добро пожаловать в <b>Gym Helper</b> — спокойный фитнес-помощник для ежедневного прогресса. 💪\n\n"
+        "<b>Что будет внутри:</b>\n"
+        "📊 расчёт калорий и макронутриентов\n"
+        "📸 анализ еды по фото\n"
+        "💊 рекомендации по добавкам\n"
+        "📈 история веса и понятная динамика\n\n"
+        "Давай начнём с короткого профиля — это займёт пару минут."
+    )
+    try:
+        if hero.exists():
+            await message.answer_photo(FSInputFile(hero), caption=welcome_text if not user else f'👋 С возвращением, <b>{first_name}</b>!')
+        elif not user:
+            await message.answer(welcome_text)
+    except Exception:
+        # The image is decorative; a broken Telegram media upload must not block the bot.
+        if not user:
+            await message.answer(welcome_text)
 
     if not user:
-        # Создаем нового пользователя
         create_user(
             user_id=user_id,
             username=message.from_user.username,
             first_name=message.from_user.first_name
         )
-
-        # Приветственное сообщение для нового пользователя
-        welcome_text = (
-            f"╭──────────────────╮\n"
-            f"│  👋 <b>ПРИВЕТ, {first_name.upper()}!</b>  │\n"
-            f"╰──────────────────╯\n\n"
-            "Добро пожаловать в <b>Gym Helper</b> — спокойный фитнес-помощник для ежедневного прогресса. 💪\n\n"
-            "<b>Что будет внутри:</b>\n"
-            "📊 расчёт калорий и макронутриентов\n"
-            "📸 анализ еды по фото\n"
-            "💊 рекомендации по добавкам\n"
-            "📈 история веса и понятная динамика\n\n"
-            "Давай начнём с короткого профиля — это займёт пару минут."
-        )
-
-        hero = Path(__file__).resolve().parents[2] / 'website' / 'static' / 'images' / 'fitness-hero.jpg'
-        if hero.exists():
-            await message.answer_photo(FSInputFile(hero), caption=welcome_text)
-        else:
-            await message.answer(welcome_text)
-
-        # Запускаем регистрацию
         await start_registration(message, state)
-
     else:
-        # Проверяем наличие профиля
         profile = get_profile(user_id)
-
         if not profile:
-            # Профиль не заполнен - запускаем регистрацию
             await message.answer(
                 "👋 С возвращением!\n\n"
                 "Вижу, что твой профиль не заполнен. Давай это исправим!"
@@ -70,10 +64,8 @@ async def cmd_start(message: Message, state: FSMContext):
                 reply_markup=get_phone_request_keyboard(),
             )
         else:
-            # Все готово - показываем главное меню
             await show_main_menu(message)
 
-    # Пользователь уже гарантированно существует: фиксируем активность безопасно.
     update_user_activity(user_id)
     create_user_event(user_id, "bot_start")
 

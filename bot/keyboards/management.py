@@ -6,7 +6,7 @@ def get_management_menu(phone_shared: bool = False) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=phone_label, callback_data='phone_share_info' if phone_shared else 'phone_share_info')],
         [InlineKeyboardButton(text='👤 Профиль', callback_data='my_profile'), InlineKeyboardButton(text='📈 Прогресс', callback_data='monthly_dashboard')],
-        [InlineKeyboardButton(text='🔔 Напоминания', callback_data='reminders_info'), InlineKeyboardButton(text='🗂 Мои данные', callback_data='my_data')],
+        [InlineKeyboardButton(text='🌐 Код для сайта', callback_data='site_access'), InlineKeyboardButton(text='🗂 Мои данные', callback_data='my_data')],
         [InlineKeyboardButton(text='🏠 Главное меню', callback_data='main_menu')],
     ])
 

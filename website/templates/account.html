@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#15211b">
+    <title>Мой кабинет — Gym Helper</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body><header class="site-header"><a href="/" class="brand"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a><nav class="main-nav"><a href="/" class="nav-link">Главная</a><a href="/calculator" class="nav-link">Калькуляторы</a><a href="/programs" class="nav-link">Тренировки</a><a href="/account" class="nav-link active">Мой кабинет</a></nav><button class="theme-toggle header-action" id="themeToggle" type="button">🌙</button></header>
+<div class="container"><main><section class="page-hero reveal"><span class="eyebrow">Единая экосистема</span><h1 id="account-title">Мой прогресс.</h1><p id="account-subtitle">Загрузка данных из общей базы Gym Helper…</p></section><div id="account-content" class="account-grid"></div><div id="account-error" class="admin-error"></div></main><footer class="site-footer"><p>Данные синхронизированы с Telegram-ботом.</p><div class="footer-links"><a href="/login">Сменить аккаунт</a><a href="/">Главная</a></div></footer></div><script src="{{ url_for('static', filename='js/account.js') }}"></script><script src="{{ url_for('static', filename='js/app.js') }}"></script></body></html>
