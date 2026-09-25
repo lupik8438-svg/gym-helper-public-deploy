@@ -7,7 +7,7 @@ from aiogram.types import MenuButtonWebApp, WebAppInfo
 
 from bot.config import BOT_TOKEN, WEBAPP_PUBLIC_URL
 from database.connection import init_db
-from bot.handlers import start, registration, calculators, food_scanner, profile, help, control, programs
+from bot.handlers import start, registration, calculators, food_scanner, profile, help, control, programs, management
 
 # Настройка логирования
 logging.basicConfig(
@@ -33,9 +33,21 @@ async def main():
     # Создание диспетчера
     dp = Dispatcher()
 
+    @dp.errors()
+    async def handle_bot_error(event):
+        # A blocked/deleted user must not stop or flood polling logs.
+        from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
+        error = event.exception
+        if isinstance(error, (TelegramForbiddenError, TelegramBadRequest)):
+            logger.warning('Telegram update skipped: %s', error)
+            return True
+        logger.exception('Unhandled Telegram update error', exc_info=error)
+        return False
+
     # Регистрация роутеров (порядок важен!)
     dp.include_router(start.router)
     dp.include_router(control.router)
+    dp.include_router(management.router)
     dp.include_router(programs.router)
     dp.include_router(help.router)
     dp.include_router(registration.router)
@@ -59,6 +71,18 @@ async def main():
         logger.warning("WEBAPP_PUBLIC_URL не настроен: Telegram не сможет открыть localhost")
 
     # Запуск
+    # Keep Telegram's command menu visible on mobile clients.
+    try:
+        from aiogram.types import BotCommand
+        await bot.set_my_commands([
+            BotCommand(command='start', description='Открыть Gym Helper'),
+            BotCommand(command='menu', description='Главное меню'),
+            BotCommand(command='cancel', description='Отменить действие'),
+            BotCommand(command='help', description='Помощь'),
+        ])
+    except Exception as error:
+        logger.warning('Не удалось установить меню команд: %s', error)
+
     logger.info("🤖 Бот запущен!")
     try:
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())

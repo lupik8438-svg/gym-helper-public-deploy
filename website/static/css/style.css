@@ -116,7 +116,7 @@ h1, h2, h3, h4 { font-family: Manrope, sans-serif; letter-spacing: -.045em; line
 .section-heading { display: flex; justify-content: space-between; gap: 22px; align-items: end; margin: 60px 0 22px; }
 .section-heading h2 { margin: 8px 0 0; font-size: clamp(1.8rem, 4vw, 3rem); }
 .section-heading p { max-width: 430px; margin: 0; color: var(--muted); }
-.features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.features { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
 .feature-card { min-height: 230px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); box-shadow: var(--shadow-sm); transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease); }
 .feature-card:hover { transform: translateY(-7px); box-shadow: var(--shadow-md); border-color: rgba(76,155,97,.28); }
 .feature-card:nth-child(1) { background: linear-gradient(150deg, #eaffca, #ffffff 70%); }

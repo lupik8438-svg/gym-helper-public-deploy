@@ -24,6 +24,7 @@ def init_db():
     Base.metadata.create_all(bind=engine)
     _add_sqlite_column_if_missing('profiles', 'training_days_per_week', 'INTEGER')
     _add_sqlite_column_if_missing('profiles', 'sleep_hours', 'FLOAT')
+    _add_sqlite_column_if_missing('users', 'phone_number', 'VARCHAR(32)')
     print("✅ База данных инициализирована")
 
 

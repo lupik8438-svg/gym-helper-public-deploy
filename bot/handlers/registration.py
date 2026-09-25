@@ -1,8 +1,8 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 
-from database.crud import create_profile, create_weight_history
+from database.crud import create_profile, create_weight_history, upsert_user, get_profile, create_user_event
 from bot.keyboards import (
     get_gender_keyboard,
     get_activity_level_keyboard,
@@ -15,6 +15,39 @@ from bot.states import RegistrationStates
 from utils.helpers import validate_age, validate_height, validate_weight, validate_target_weight, validate_range
 
 router = Router()
+
+@router.message(RegistrationStates.phone, F.contact)
+async def process_phone_contact(message: Message, state: FSMContext):
+    contact = message.contact
+    if not contact or contact.user_id != message.from_user.id:
+        await message.answer('❌ Для безопасности отправь именно свой контакт кнопкой Telegram.', reply_markup=get_cancel_registration_keyboard())
+        return
+    upsert_user(message.from_user.id, message.from_user.username, message.from_user.first_name, contact.phone_number.strip())
+    create_user_event(message.from_user.id, 'phone_shared', {'during': 'registration'})
+    await message.answer('✅ Номер подтверждён. Дальше можно заполнить профиль.', reply_markup=ReplyKeyboardRemove())
+    data = await state.get_data()
+    if data.get('after_phone') == 'menu' and get_profile(message.from_user.id):
+        await state.clear()
+        await message.answer('Главное меню:', reply_markup=get_main_menu())
+        return
+    await state.set_state(RegistrationStates.age)
+    await message.answer('1️⃣ <b>Сколько тебе лет?</b>\nВведи возраст числом (например: 25)', reply_markup=get_cancel_registration_keyboard())
+
+
+@router.message(RegistrationStates.phone)
+async def process_phone_skip_or_retry(message: Message, state: FSMContext):
+    if (message.text or '').strip().lower() in {'отмена', 'пропустить', '/skip'}:
+        data = await state.get_data()
+        if data.get('after_phone') == 'menu' and get_profile(message.from_user.id):
+            await state.clear()
+            await message.answer('Номер не привязан. Главное меню:', reply_markup=ReplyKeyboardRemove())
+            await message.answer('Выбери действие:', reply_markup=get_main_menu())
+            return
+        await state.set_state(RegistrationStates.age)
+        await message.answer('Хорошо, без номера.\n\n1️⃣ <b>Сколько тебе лет?</b>\nВведи возраст числом (например: 25)', reply_markup=get_cancel_registration_keyboard())
+        return
+    await message.answer('Нажми «📱 Поделиться номером» или «Отмена». Номер обычным сообщением не отправляй.', reply_markup=get_cancel_registration_keyboard())
+
 
 # ===== ВОЗРАСТ =====
 @router.message(RegistrationStates.age)

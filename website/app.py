@@ -145,7 +145,7 @@ def admin_export():
     output = StringIO()
     output.write('\ufeff')
     writer = csv.DictWriter(output, fieldnames=[
-        'user_id', 'first_name', 'username', 'created_at', 'last_active',
+        'user_id', 'first_name', 'username', 'phone_number', 'created_at', 'last_active',
         'profile_completed', 'goal', 'current_weight', 'target_weight',
         'goal_progress', 'weight_entries', 'food_entries', 'events',
     ])

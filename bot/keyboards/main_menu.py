@@ -9,14 +9,14 @@ def _web_app_button():
             text="🚀 Открыть Gym Helper",
             web_app=WebAppInfo(url=WEBAPP_PUBLIC_URL.rstrip('/')),
         )
-    return InlineKeyboardButton(text="🌐 Mini App: настрой HTTPS", callback_data="app_setup")
+    return InlineKeyboardButton(text="🌐 Mini App пока не подключён", callback_data="app_setup")
 
 
 def get_main_menu() -> InlineKeyboardMarkup:
-    keyboard = [
+    """Compact mobile-first home screen with clear app management/navigation."""
+    return InlineKeyboardMarkup(inline_keyboard=[
         [_web_app_button()],
-        [InlineKeyboardButton(text="📊 Калькуляторы", callback_data="calculators"), InlineKeyboardButton(text="📸 Сканировать", callback_data="scan_food")],
-        [InlineKeyboardButton(text="💊 Добавки", callback_data="supplements"), InlineKeyboardButton(text="👤 Профиль", callback_data="my_profile")],
-        [InlineKeyboardButton(text="📈 Мой прогресс", callback_data="weight_history"), InlineKeyboardButton(text="📋 Программы", callback_data="programs_soon")],
-    ]
-    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+        [InlineKeyboardButton(text="👤 Мой профиль", callback_data="my_profile"), InlineKeyboardButton(text="📈 Прогресс", callback_data="monthly_dashboard")],
+        [InlineKeyboardButton(text="🏋️ Тренировки", callback_data="programs_soon"), InlineKeyboardButton(text="🍽 Питание / сканер", callback_data="scan_food")],
+        [InlineKeyboardButton(text="🧮 Калькуляторы", callback_data="calculators"), InlineKeyboardButton(text="🛠 Управление", callback_data="bot_settings")],
+    ])

@@ -26,18 +26,20 @@ def _month_range(months: int = 12) -> List[str]:
 
 # ===== USERS =====
 
-def upsert_user(user_id: int, username: str = None, first_name: str = None) -> User:
+def upsert_user(user_id: int, username: str = None, first_name: str = None, phone_number: str = None) -> User:
     db = SessionLocal()
     try:
         user = db.query(User).filter(User.user_id == user_id).first()
         if not user:
-            user = User(user_id=user_id, username=username, first_name=first_name)
+            user = User(user_id=user_id, username=username, first_name=first_name, phone_number=phone_number)
             db.add(user)
         else:
             if username is not None:
                 user.username = username
             if first_name is not None:
                 user.first_name = first_name
+            if phone_number is not None:
+                user.phone_number = phone_number
             user.last_active = datetime.utcnow()
         db.commit()
         db.refresh(user)
@@ -407,6 +409,7 @@ def get_admin_users(search: str = '', goal: str = '') -> List[Dict]:
                 'user_id': user.user_id,
                 'first_name': user.first_name or 'Без имени',
                 'username': user.username,
+                'phone_number': user.phone_number,
                 'created_at': user.created_at.isoformat() if user.created_at else None,
                 'last_active': user.last_active.isoformat() if user.last_active else None,
                 'profile_completed': profile is not None,

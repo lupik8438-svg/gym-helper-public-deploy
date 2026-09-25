@@ -3,6 +3,7 @@ from aiogram.fsm.state import State, StatesGroup
 
 class RegistrationStates(StatesGroup):
     """Пошаговое создание профиля пользователя."""
+    phone = State()
     age = State()
     gender = State()
     height = State()

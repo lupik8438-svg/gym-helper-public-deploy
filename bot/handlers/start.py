@@ -1,11 +1,12 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.fsm.context import FSMContext
 
 from database.crud import get_user, get_profile, create_user, update_user_activity, create_user_event
-from bot.keyboards import get_main_menu
+from bot.keyboards import get_main_menu, get_phone_request_keyboard
 from bot.states import RegistrationStates
+from pathlib import Path
 
 router = Router()
 
@@ -41,7 +42,11 @@ async def cmd_start(message: Message, state: FSMContext):
             "Давай начнём с короткого профиля — это займёт пару минут."
         )
 
-        await message.answer(welcome_text)
+        hero = Path(__file__).resolve().parents[2] / 'website' / 'static' / 'images' / 'fitness-hero.jpg'
+        if hero.exists():
+            await message.answer_photo(FSInputFile(hero), caption=welcome_text)
+        else:
+            await message.answer(welcome_text)
 
         # Запускаем регистрацию
         await start_registration(message, state)
@@ -57,6 +62,13 @@ async def cmd_start(message: Message, state: FSMContext):
                 "Вижу, что твой профиль не заполнен. Давай это исправим!"
             )
             await start_registration(message, state)
+        elif not user.phone_number:
+            await state.set_state(RegistrationStates.phone)
+            await state.update_data(after_phone='menu')
+            await message.answer(
+                "👋 Профиль уже готов. Если хочешь, привяжи номер для будущих напоминаний — это необязательно.",
+                reply_markup=get_phone_request_keyboard(),
+            )
         else:
             # Все готово - показываем главное меню
             await show_main_menu(message)
@@ -66,12 +78,14 @@ async def cmd_start(message: Message, state: FSMContext):
     create_user_event(user_id, "bot_start")
 
 async def start_registration(message: Message, state: FSMContext):
-    """Начать процесс регистрации"""
-    await state.set_state(RegistrationStates.age)
+    """Начать регистрацию с опционального подтверждения номера телефона."""
+    await state.set_state(RegistrationStates.phone)
+    await state.update_data(after_phone='profile')
     await message.answer(
-        "Отлично! Ответь на несколько вопросов, чтобы я мог дать тебе персональные рекомендации.\n\n"
-        "1️⃣ <b>Сколько тебе лет?</b>\n"
-        "Введи свой возраст числом (например: 25)"
+        "📱 <b>Шаг 0 из 10 · контакт</b>\n\n"
+        "Номер телефона необязателен. Если поделишься им через системную кнопку Telegram, "
+        "мы сможем добавить напоминания и восстановление доступа в будущем. Обычным текстом номер не отправляй.",
+        reply_markup=get_phone_request_keyboard(),
     )
 
 async def show_main_menu(message: Message):

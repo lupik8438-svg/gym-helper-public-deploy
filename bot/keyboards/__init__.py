@@ -9,6 +9,7 @@ from .registration import (
 )
 from .food_scan import get_food_confirmation_keyboard, get_daily_stats_keyboard
 from .profile import get_profile_menu, get_edit_profile_menu, get_profile_input_keyboard
+from .management import get_management_menu, get_phone_request_keyboard
 
 __all__ = [
     'get_main_menu',
@@ -23,5 +24,7 @@ __all__ = [
     'get_daily_stats_keyboard',
     'get_profile_menu',
     'get_edit_profile_menu',
-    'get_profile_input_keyboard'
+    'get_profile_input_keyboard',
+    'get_management_menu',
+    'get_phone_request_keyboard',
 ]

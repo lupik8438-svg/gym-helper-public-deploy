@@ -15,6 +15,7 @@ class User(Base):
     user_id = Column(BigInteger, primary_key=True)
     username = Column(String(255))
     first_name = Column(String(255))
+    phone_number = Column(String(32), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_active = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

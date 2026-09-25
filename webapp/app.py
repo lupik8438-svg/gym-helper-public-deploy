@@ -79,6 +79,7 @@ def _user_profile_response(user_id: int):
             'user_id': user_id,
             'first_name': user.first_name if user else None,
             'username': user.username if user else None,
+            'phone_number': user.phone_number if user else None,
         },
         'profile': _profile_payload(profile),
     }
