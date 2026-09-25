@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+fitness_bot.db
+*.db
+__pycache__/
+*.py[cod]
+.DS_Store
+.pytest_cache/
+.venv/
+venv/
+node_modules/

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#111a17">
+    <title>Gym Helper — твой прогресс</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header" id="appHeader">
+            <div class="brand-lockup"><span class="brand-mark">✦</span><div><strong>Gym Helper</strong><span>твоя форма, по твоим правилам</span></div></div>
+            <div class="user-chip"><span class="status-dot"></span><span id="userName">Загрузка…</span></div>
+        </header>
+
+        <main class="app-main">
+            <section class="profile-gate hidden" id="profileGate" aria-hidden="true">
+                <div class="gate-icon">✦</div>
+                <span class="eyebrow">Первый запуск</span>
+                <h1>Сначала познакомимся</h1>
+                <p>Заполни профиль в Telegram-боте. После этого здесь автоматически появятся твои вес, BMI, калории и месячный прогресс.</p>
+                <button class="gate-button" type="button" onclick="openBotRegistration()">Открыть регистрацию в боте <span>↗</span></button>
+                <small>Можно вернуться сюда в любой момент — данные сохраняются в общей базе.</small>
+            </section>
+            <section class="app-content hidden" id="appContent">
+            <section class="welcome-panel">
+                <div><span class="eyebrow">Сегодня · твой ритм</span><h1>Маленький шаг<br><em>сильнее вчера.</em></h1><p>Отслеживай показатели, питание и движение в одном спокойном пространстве.</p></div>
+                <div class="welcome-orbit" aria-hidden="true"><span>✦</span></div>
+            </section>
+
+            <nav class="top-tabs" aria-label="Разделы приложения">
+                <button class="tab active" data-tab="dashboard"><span>⌂</span><b>Обзор</b></button>
+                <button class="tab" data-tab="calculators"><span>⌁</span><b>Расчёты</b></button>
+                <button class="tab" data-tab="progress"><span>↗</span><b>Прогресс</b></button>
+                <button class="tab" data-tab="training"><span>🏋</span><b>Тренировки</b></button>
+                <button class="tab" data-tab="nutrition"><span>◉</span><b>Питание</b></button>
+            </nav>
+
+            <section class="tab-content active" id="dashboard">
+                <div class="section-heading"><div><span class="eyebrow">Сводка</span><h2>Твои показатели</h2></div><span class="live-badge">● live</span></div>
+                <div class="stats-grid">
+                    <article class="stat-card tone-lime"><span class="stat-icon">⚖</span><span class="stat-label">Текущий вес</span><strong id="currentWeight" class="skeleton-value">—</strong><span class="stat-note">кг</span></article>
+                    <article class="stat-card tone-coral"><span class="stat-icon">↘</span><span class="stat-label">Целевой вес</span><strong id="targetWeight" class="skeleton-value">—</strong><span class="stat-note">кг</span></article>
+                    <article class="stat-card tone-blue"><span class="stat-icon">◌</span><span class="stat-label">BMI</span><strong id="bmiValue" class="skeleton-value">—</strong><span class="stat-note">индекс массы</span></article>
+                    <article class="stat-card tone-gold"><span class="stat-icon">↯</span><span class="stat-label">Цель энергии</span><strong id="dailyCalories" class="skeleton-value">—</strong><span class="stat-note">ккал / день</span></article>
+                </div>
+
+                <div class="section-heading compact"><div><span class="eyebrow">Фокус дня</span><h2>Калории</h2></div></div>
+                <article class="card calorie-card">
+                    <div class="ring-wrap"><svg class="progress-ring" viewBox="0 0 180 180" aria-label="Прогресс калорий"><circle class="ring-bg" cx="90" cy="90" r="74"></circle><circle class="ring-value" id="caloriesProgress" cx="90" cy="90" r="74"></circle></svg><div class="ring-label"><strong id="todayCalories">0</strong><span>ккал съедено</span></div></div>
+                    <div class="calorie-meta"><div><span class="muted-label">Приёмов пищи</span><strong id="mealsCount"><span>0</span> / 4</strong></div><div class="progress-track"><span id="calorieTrack"></span></div><p>Держи темп без перфекционизма — важна тенденция.</p></div>
+                </article>
+
+                <div class="section-heading compact"><div><span class="eyebrow">Быстрый доступ</span><h2>Что сделаем?</h2></div></div>
+                <div class="action-buttons"><button class="action-btn primary" onclick="scanFood()"><span>◉</span><b>Сканировать еду</b><small>через Telegram-бота</small></button><button class="action-btn secondary" onclick="updateWeight()"><span>⚖</span><b>Обновить вес</b><small>зафиксировать прогресс</small></button></div>
+            </section>
+
+            <section class="tab-content" id="calculators">
+                <div class="section-heading"><div><span class="eyebrow">Точные ориентиры</span><h2>Расчёты</h2></div></div>
+                <article class="card calculator-card"><div class="card-heading"><span class="card-icon">◌</span><div><h3>Индекс массы тела</h3><p>Быстрый ориентир по текущему весу и росту.</p></div></div><div class="calculator-result" id="bmiResult"><strong>—</strong><span>Нажми, чтобы рассчитать</span></div><button class="wide-btn" onclick="calculateBMI()">Рассчитать BMI <span>↗</span></button></article>
+                <article class="card calculator-card"><div class="card-heading"><span class="card-icon">↯</span><div><h3>Калории и БЖУ</h3><p>Дневная цель под твою активность.</p></div></div><div class="macros-grid" id="macrosResult"><div class="macro-item"><span>Белки</span><strong>—</strong><small>г</small></div><div class="macro-item"><span>Жиры</span><strong>—</strong><small>г</small></div><div class="macro-item"><span>Углеводы</span><strong>—</strong><small>г</small></div></div><button class="wide-btn" onclick="calculateCalories()">Рассчитать цель <span>↗</span></button></article>
+                <article class="card calculator-card"><div class="card-heading"><span class="card-icon">✚</span><div><h3>Поддержка</h3><p>Общие рекомендации по добавкам.</p></div></div><div class="supplements-list" id="supplementsList"><div class="empty-state small"><strong>Пока нет расчёта</strong><span>Нажми кнопку, чтобы увидеть подборку.</span></div></div><button class="wide-btn" onclick="calculateSupplements()">Получить рекомендации <span>↗</span></button></article>
+            </section>
+
+            <section class="tab-content" id="progress">
+                <div class="section-heading"><div><span class="eyebrow">Динамика</span><h2>Твой прогресс</h2></div></div>
+                <div class="progress-summary" id="progressSummary"><div class="mini-stat"><span>🔥</span><strong id="streakDays">—</strong><small>дней подряд</small></div><div class="mini-stat"><span>🎯</span><strong id="goalProgress">—</strong><small>путь к цели</small></div><div class="mini-stat"><span>🏋</span><strong id="trainingCount">—</strong><small>тренировок</small></div><div class="mini-stat"><span>🚴</span><strong id="cardioTotal">—</strong><small>мин кардио</small></div></div>
+                <article class="card chart-card"><div class="card-heading"><span class="card-icon">↗</span><div><h3>История веса</h3><p>Точки контроля по месяцам и дням.</p></div></div><div class="chart-wrap"><canvas id="weightChart"></canvas></div></article>
+                <article class="card"><div class="card-heading"><span class="card-icon">▦</span><div><h3>По месяцам</h3><p>Как меняется ритм и результат.</p></div></div><div class="monthly-list" id="monthlyList"><div class="loading skeleton-line"></div><div class="loading skeleton-line short"></div></div></article>
+                <article class="card"><div class="card-heading"><span class="card-icon">✦</span><div><h3>Достижения</h3><p>Система отмечает стабильность, а не идеальность.</p></div></div><div class="achievement-list" id="achievementList"></div></article>
+                <article class="card"><div class="card-heading"><span class="card-icon">≡</span><div><h3>Измерения</h3><p>Лента последних записей.</p></div></div><div class="weight-history" id="weightHistory"><div class="loading skeleton-line"></div><div class="loading skeleton-line short"></div></div></article>
+            </section>
+
+            <section class="tab-content" id="training">
+                <div class="section-heading"><div><span class="eyebrow">Планы и активность</span><h2>Тренировки</h2></div></div>
+                <article class="card training-log-card">
+                    <div class="card-heading"><span class="card-icon">＋</span><div><h3>Записать тренировку</h3><p>Силовые занятия и кардио учитываются отдельно в месячном прогрессе.</p></div></div>
+                    <label class="training-label" for="programSelect">Тип программы</label>
+                    <select id="programSelect" class="training-select"><option value="full_body">Full Body</option><option value="split">Классический сплит</option><option value="upper_lower">Верх / низ</option><option value="ppl">Жим · тяни · ноги</option><option value="cardio">Кардио отдельно</option></select>
+                    <div class="training-input-grid"><label>Силовая, минут<input id="trainingMinutes" type="number" min="0" max="600" value="45"></label><label>Кардио, минут<input id="cardioMinutes" type="number" min="0" max="600" value="0"></label></div>
+                    <label class="training-label" for="trainingNotes">Заметка (необязательно)</label><input class="training-note-input" id="trainingNotes" maxlength="500" placeholder="Например: тренировка A, лёгкая нагрузка">
+                    <button class="wide-btn" id="saveTrainingButton" type="button" onclick="saveTrainingSession()">Сохранить тренировку <span>↗</span></button>
+                </article>
+                <div class="section-heading compact"><div><span class="eyebrow">Выбери основу</span><h2>Шаблоны программ</h2></div></div>
+                <div class="workout-program-list" id="workoutProgramList"><div class="empty-state small"><strong>Загружаю схемы…</strong></div></div>
+                <div class="section-heading compact"><div><span class="eyebrow">История</span><h2>Последние занятия</h2></div></div>
+                <article class="card"><div class="training-session-list" id="trainingSessionList"><div class="empty-state small"><strong>Загрузка…</strong></div></div></article>
+                <aside class="training-safety-note">Программы — общие примеры, не индивидуальное назначение. Начинай с комфортной нагрузки, следи за техникой и отдыхом. При боли или заболеваниях проконсультируйся со специалистом.</aside>
+            </section>
+
+            <section class="tab-content" id="nutrition">
+                <div class="section-heading"><div><span class="eyebrow">Дневник</span><h2>Питание</h2></div></div>
+                <article class="card nutrition-card"><div class="nutrition-summary"><div><span class="muted-label">Калории</span><strong id="nutritionCalories">0 ккал</strong></div><div><span class="muted-label">Приёмов</span><strong id="nutritionMeals">0</strong></div></div><div class="meals-list" id="mealsList"><div class="empty-state"><span class="empty-icon">◉</span><strong>Пока пусто</strong><span>Сканируй еду в боте — записи появятся здесь.</span></div></div></article>
+            </section>
+            </section>
+        </main>
+
+        <nav class="bottom-tabs" aria-label="Мобильная навигация"><button class="tab active" data-tab="dashboard"><span>⌂</span><b>Обзор</b></button><button class="tab" data-tab="calculators"><span>⌁</span><b>Расчёты</b></button><button class="tab" data-tab="progress"><span>↗</span><b>Прогресс</b></button><button class="tab" data-tab="training"><span>🏋</span><b>Тренировки</b></button><button class="tab" data-tab="nutrition"><span>◉</span><b>Питание</b></button></nav>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

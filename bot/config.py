@@ -1,0 +1,48 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Bot settings
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+
+# Database: one absolute file for every process regardless of cwd.
+_project_root = Path(__file__).resolve().parents[1]
+_default_db = _project_root / 'fitness_bot.db'
+DATABASE_URL = os.getenv('DATABASE_URL', f'sqlite:///{_default_db}')
+if DATABASE_URL.startswith('sqlite:///./'):
+    DATABASE_URL = f"sqlite:///{_project_root / DATABASE_URL.replace('sqlite:///./', '')}"
+
+# OpenAI
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# Web App
+# WEBAPP_URL is local URL for browser development. Telegram requires WEBAPP_PUBLIC_URL.
+WEBAPP_URL = os.getenv('WEBAPP_URL', 'http://localhost:8081')
+WEBAPP_PUBLIC_URL = os.getenv('WEBAPP_PUBLIC_URL', '').strip()
+if WEBAPP_PUBLIC_URL and not WEBAPP_PUBLIC_URL.startswith(('http://', 'https://')):
+    WEBAPP_PUBLIC_URL = f'https://{WEBAPP_PUBLIC_URL}'
+WEB_PORT = int(os.getenv('WEB_PORT', 8081))
+REQUIRE_WEBAPP_AUTH = os.getenv('REQUIRE_WEBAPP_AUTH', 'True').lower() == 'true'
+
+# Admin dashboard
+ADMIN_KEY = os.getenv('ADMIN_KEY', '').strip()
+ADMIN_SESSION_SECRET = os.getenv('ADMIN_SESSION_SECRET', '').strip() or (BOT_TOKEN or 'gym-helper-local-secret')
+
+# Environment
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+
+ACTIVITY_LEVELS = {
+    'sedentary': 1.2,
+    'light': 1.375,
+    'moderate': 1.55,
+    'active': 1.725,
+    'very_active': 1.9,
+}
+
+GOAL_ADJUSTMENTS = {
+    'lose_weight': -500,
+    'maintain': 0,
+    'gain_muscle': 300,
+}
