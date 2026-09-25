@@ -46,3 +46,7 @@ LocalTunnel подходит только для короткого теста. 
 - `BOT_TOKEN`, `DEEPSEEK_API_KEY`, `ADMIN_KEY` и строка базы должны храниться только в Secrets/Environment Variables.
 - `DEEPSEEK_API_KEY` нужен для текстовой генерации; распознавание изображений настраивается отдельно через vision-compatible API, потому что DeepSeek Chat не анализирует фото напрямую.
 - Owner Dashboard не включён в публичный демо-режим и требует ключ владельца в рабочем режиме.
+
+## Если Render пишет `Failed to build pillow` и `KeyError: __version__`
+
+В проекте закреплён Python 3.12 через `runtime.txt`, а Pillow обновлён до совместимой версии. В Render после изменения файлов нажми **Manual Deploy → Clear build cache & deploy**. Если Render использует старый commit, выбери ветку `main` и запусти deploy заново.
