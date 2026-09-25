@@ -50,3 +50,7 @@ LocalTunnel подходит только для короткого теста. 
 ## Если Render пишет `Failed to build pillow` и `KeyError: __version__`
 
 В проекте закреплён Python 3.12 через `runtime.txt`, а Pillow обновлён до совместимой версии. В Render после изменения файлов нажми **Manual Deploy → Clear build cache & deploy**. Если Render использует старый commit, выбери ветку `main` и запусти deploy заново.
+
+## Если Render пишет `metadata-generation-failed` для `pydantic-core`
+
+Это возникает из-за старого ограничения `pydantic<2.6`, для которого pip пытается собрать несовместимый `pydantic-core`. Ограничение обновлено до `pydantic>=2.10,<3`, где для Python 3.12 используется готовый wheel. В Render снова выбери **Manual Deploy → Clear build cache & deploy**.
