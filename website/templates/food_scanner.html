@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#15211b">
+    <title>Сканер еды — Gym Helper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand" aria-label="Gym Helper — на главную"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a>
+        <nav class="main-nav" aria-label="Основная навигация">
+            <a href="/" class="nav-link">Главная</a>
+            <a href="/calculator" class="nav-link">Калькуляторы</a>
+            <a href="/food-scanner" class="nav-link active">Сканер еды</a>
+            <a href="/user-progress" class="nav-link">Прогресс</a>
+            <a href="/programs" class="nav-link">Тренировки</a>
+        </nav>
+        <button class="theme-toggle header-action" id="themeToggle" type="button" aria-label="Переключить тему">🌙</button>
+    </header>
+    <div class="container">
+        <main>
+            <section class="page-hero reveal"><span class="eyebrow">Питание без лишних таблиц</span><h1>Собери тарелку. Пойми состав.</h1><p>Введи продукт и вес порции или выбери быстрый вариант — результат появится сразу.</p></section>
+            <section class="scanner-section reveal">
+                <h2>Анализ продукта</h2><p class="info-text">Данные указаны на основе встроенной базы продуктов и помогают быстро оценить порцию.</p>
+                <form id="food-form" class="scanner-form">
+                    <div class="form-group"><label for="food-name">Название продукта</label><input type="text" id="food-name" list="food-suggestions" placeholder="Например: куриная грудка" autocomplete="off"><datalist id="food-suggestions"><option value="Куриная грудка"><option value="Рис"><option value="Яйца"><option value="Банан"><option value="Овсянка"><option value="Творог"><option value="Говядина"><option value="Брокколи"></datalist></div>
+                    <div class="form-group"><label for="food-weight">Вес, г</label><input type="number" id="food-weight" min="1" step="1" value="100"></div>
+                    <button type="submit" class="btn btn-dark">Анализировать <span>↗</span></button>
+                </form>
+                <div id="food-result" class="result-box"></div>
+                <div class="popular-foods"><h3>Популярные продукты</h3><div class="food-grid">
+                    <button class="food-card" data-food="Куриная грудка"><span class="food-emoji">🍗</span><span>Куриная грудка</span></button><button class="food-card" data-food="Рис"><span class="food-emoji">🍚</span><span>Рис</span></button><button class="food-card" data-food="Яйца"><span class="food-emoji">🥚</span><span>Яйца</span></button><button class="food-card" data-food="Банан"><span class="food-emoji">🍌</span><span>Банан</span></button><button class="food-card" data-food="Овсянка"><span class="food-emoji">🥣</span><span>Овсянка</span></button><button class="food-card" data-food="Творог"><span class="food-emoji">🧀</span><span>Творог</span></button><button class="food-card" data-food="Говядина"><span class="food-emoji">🥩</span><span>Говядина</span></button><button class="food-card" data-food="Брокколи"><span class="food-emoji">🥦</span><span>Брокколи</span></button>
+                </div></div>
+                <div class="info-section"><h3>Как пользоваться</h3><ol><li>Введи название продукта или выбери карточку.</li><li>Укажи точный вес своей порции.</li><li>Сравни калории и макронутриенты — и реши, как вписать продукт в день.</li></ol></div>
+            </section>
+        </main>
+        <footer class="site-footer"><p>© 2026 Gym Helper. Питание — часть системы, а не наказание.</p><div class="footer-links"><a href="/">Главная</a><a href="/calculator">Калькуляторы</a></div></footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="{{ url_for('static', filename='js/food_scanner.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

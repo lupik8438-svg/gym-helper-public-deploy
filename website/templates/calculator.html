@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#15211b">
+    <title>Калькуляторы — Gym Helper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand" aria-label="Gym Helper — на главную"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a>
+        <nav class="main-nav" aria-label="Основная навигация">
+            <a href="/" class="nav-link">Главная</a>
+            <a href="/calculator" class="nav-link active">Калькуляторы</a>
+            <a href="/food-scanner" class="nav-link">Сканер еды</a>
+            <a href="/user-progress" class="nav-link">Прогресс</a>
+            <a href="/programs" class="nav-link">Тренировки</a>
+        </nav>
+        <button class="theme-toggle header-action" id="themeToggle" type="button" aria-label="Переключить тему">🌙</button>
+    </header>
+    <div class="container">
+        <main>
+            <section class="page-hero reveal"><span class="eyebrow">Персональные расчёты</span><h1>Цифры, которые помогают действовать.</h1><p>Заполни несколько полей и получи спокойную, понятную картину текущего состояния.</p></section>
+            <div class="calculator-tabs" role="tablist" aria-label="Тип расчёта">
+                <button class="tab-btn active" data-tab="bmi" role="tab">01 · BMI</button>
+                <button class="tab-btn" data-tab="calories" role="tab">02 · Калории</button>
+                <button class="tab-btn" data-tab="supplements" role="tab">03 · Добавки</button>
+            </div>
+            <div class="progress-steps" aria-label="Шаги расчёта"><div class="progress-step active"><span>1</span> Тело</div><i></i><div class="progress-step"><span>2</span> Энергия</div><i></i><div class="progress-step"><span>3</span> Поддержка</div></div>
+
+            <div id="bmi-tab" class="tab-content active" role="tabpanel">
+                <div class="calculator-card">
+                    <h2>Индекс массы тела</h2><p>Быстрый ориентир для оценки соотношения веса и роста.</p>
+                    <form id="bmi-form">
+                        <div class="form-grid"><div class="form-group"><label for="bmi-weight">Вес, кг</label><input type="number" id="bmi-weight" step="0.1" min="20" max="300" required placeholder="70"></div><div class="form-group"><label for="bmi-height">Рост, см</label><input type="number" id="bmi-height" step="1" min="100" max="240" required placeholder="175"></div></div>
+                        <div class="form-actions"><button type="submit" class="btn btn-dark">Рассчитать BMI <span>↗</span></button><span class="form-hint">Займёт меньше минуты</span></div>
+                    </form><div id="bmi-result" class="result-box"></div>
+                </div>
+            </div>
+
+            <div id="calories-tab" class="tab-content" role="tabpanel">
+                <div class="calculator-card">
+                    <h2>Калории и макронутриенты</h2><p>Определи дневную энергию под свой образ жизни и цель.</p>
+                    <form id="calories-form">
+                        <div class="form-grid"><div class="form-group"><label for="cal-weight">Вес, кг</label><input type="number" id="cal-weight" step="0.1" min="20" max="300" required placeholder="70"></div><div class="form-group"><label for="cal-height">Рост, см</label><input type="number" id="cal-height" step="1" min="100" max="240" required placeholder="175"></div><div class="form-group"><label for="cal-age">Возраст</label><input type="number" id="cal-age" min="14" max="100" required placeholder="25"></div><div class="form-group"><label for="cal-gender">Пол</label><select id="cal-gender" required><option value="">Выберите</option><option value="male">Мужской</option><option value="female">Женский</option></select></div><div class="form-group"><label for="cal-activity">Активность</label><select id="cal-activity" required><option value="">Выберите</option><option value="sedentary">Сидячий образ жизни</option><option value="light">Лёгкая (1–3 раза в неделю)</option><option value="moderate">Умеренная (3–5 раз)</option><option value="active">Высокая (6–7 раз)</option><option value="very_active">Очень высокая</option></select></div><div class="form-group"><label for="cal-goal">Цель</label><select id="cal-goal" required><option value="">Выберите</option><option value="lose_weight">Снижение веса</option><option value="maintain">Поддержание веса</option><option value="gain_muscle">Набор массы</option></select></div></div>
+                        <div class="form-actions"><button type="submit" class="btn btn-dark">Рассчитать цель <span>↗</span></button><span class="form-hint">Формула Mifflin–St Jeor</span></div>
+                    </form><div id="calories-result" class="result-box"></div>
+                </div>
+            </div>
+
+            <div id="supplements-tab" class="tab-content" role="tabpanel">
+                <div class="calculator-card">
+                    <h2>Спортивное питание</h2><p>Подбери базовые варианты поддержки с учётом цели и активности.</p>
+                    <form id="supplements-form">
+                        <div class="form-grid"><div class="form-group"><label for="sup-weight">Вес, кг</label><input type="number" id="sup-weight" step="0.1" min="20" max="300" required placeholder="70"></div><div class="form-group"><label for="sup-goal">Цель</label><select id="sup-goal" required><option value="">Выберите</option><option value="lose_weight">Снижение веса</option><option value="maintain">Поддержание формы</option><option value="gain_muscle">Набор массы</option></select></div><div class="form-group"><label for="sup-activity">Активность</label><select id="sup-activity" required><option value="">Выберите</option><option value="sedentary">Сидячий образ жизни</option><option value="light">Лёгкая</option><option value="moderate">Умеренная</option><option value="active">Высокая</option><option value="very_active">Очень высокая</option></select></div></div>
+                        <div class="form-actions"><button type="submit" class="btn btn-dark">Получить рекомендации <span>↗</span></button><span class="form-hint">Общие рекомендации, не замена врачу</span></div>
+                    </form><div id="supplements-result" class="result-box"></div>
+                </div>
+            </div>
+        </main>
+        <footer class="site-footer"><p>© 2026 Gym Helper. Данные — ориентир для осознанных решений.</p><div class="footer-links"><a href="/">Главная</a><a href="/food-scanner">Сканер еды</a></div></footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="{{ url_for('static', filename='js/calculator.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

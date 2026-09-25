@@ -26,6 +26,11 @@ def startup():
     init_db()
 
 
+@app.get('/healthz')
+async def healthz():
+    return {'ok': True, 'service': 'gym-helper-mini-app'}
+
+
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})

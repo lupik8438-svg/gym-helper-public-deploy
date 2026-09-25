@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#15211b">
+    <title>Gym Helper — умнее тренировки, спокойнее прогресс</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand" aria-label="Gym Helper — на главную">
+            <span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span>
+        </a>
+        <nav class="main-nav" aria-label="Основная навигация">
+            <a href="/" class="nav-link active">Главная</a>
+            <a href="/calculator" class="nav-link">Калькуляторы</a>
+            <a href="/food-scanner" class="nav-link">Сканер еды</a>
+            <a href="/user-progress" class="nav-link">Прогресс</a>
+            <a href="/programs" class="nav-link">Тренировки</a>
+        </nav>
+        <button class="theme-toggle header-action" id="themeToggle" type="button" aria-label="Переключить тему">🌙</button>
+    </header>
+
+    <div class="container">
+        <main>
+            <section class="hero reveal">
+                <div class="hero-content">
+                    <span class="eyebrow">Твой ритм. Твои данные.</span>
+                    <h1>Тренируйся <span>осознанно.</span> Живи сильнее.</h1>
+                    <p>Gym Helper превращает цифры о теле и питании в простые решения на каждый день — без шума, крайностей и лишней сложности.</p>
+                    <div class="cta-buttons">
+                        <a href="/calculator" class="btn btn-primary pulse-soft">Рассчитать показатели <span>↗</span></a>
+                        <a href="/food-scanner" class="btn btn-secondary">Проверить продукт</a>
+                    </div>
+                </div>
+            </section>
+
+            <section aria-labelledby="features-title">
+                <div class="section-heading">
+                    <div><span class="eyebrow">Возможности</span><h2 id="features-title">Всё нужное — в одном потоке</h2></div>
+                    <p>Минимум действий, максимум ясности: от первого расчёта до привычки, которая держится.</p>
+                </div>
+                <div class="features">
+                    <article class="feature-card reveal"><div class="feature-icon">◌</div><h3>BMI без догадок</h3><p>Пойми текущую точку и получи понятную интерпретацию результата.</p></article>
+                    <article class="feature-card reveal"><div class="feature-icon">↯</div><h3>Калории и БЖУ</h3><p>Персональная дневная цель с разбивкой по макронутриентам.</p></article>
+                    <article class="feature-card reveal"><div class="feature-icon">✚</div><h3>Добавки с контекстом</h3><p>Рекомендации с дозировкой, приоритетом и важными ограничениями.</p></article>
+                    <article class="feature-card reveal"><div class="feature-icon">◉</div><h3>Сканер продуктов</h3><p>Быстро проверь калории и состав привычной порции.</p></article>
+                </div>
+            </section>
+
+            <section class="split-section" aria-labelledby="why-title">
+                <div class="info reveal">
+                    <span class="eyebrow">Подход</span>
+                    <h2 id="why-title">Прогресс любит ясность.</h2>
+                    <p>Мы не обещаем магию. Мы помогаем видеть взаимосвязь между целями, питанием и действиями — чтобы двигаться уверенно.</p>
+                    <ul>
+                        <li>Научно обоснованные формулы и аккуратные расчёты</li>
+                        <li>Персональные рекомендации вместо универсальных советов</li>
+                        <li>Простой интерфейс, которым удобно пользоваться каждый день</li>
+                    </ul>
+                </div>
+                <div class="metric-panel">
+                    <div class="metric-card reveal"><span>Доступно</span><strong>3</strong><span>интерфейса под любой сценарий</span></div>
+                    <div class="metric-card accent reveal"><span>Фокус</span><strong>1</strong><span>понятная цель на сегодня</span></div>
+                    <div class="metric-card reveal"><span>Ритм</span><strong>24/7</strong><span>поддержка твоих привычек</span></div>
+                    <div class="metric-card reveal"><span>Внутри</span><strong>∞</strong><span>маленьких шагов к большой форме</span></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>© 2026 Gym Helper. Сделано для устойчивого прогресса.</p>
+            <div class="footer-links"><a href="/calculator">Калькуляторы</a><a href="/food-scanner">Сканер еды</a><a href="/programs">Тренировки</a><a href="/admin">Для владельца →</a></div>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

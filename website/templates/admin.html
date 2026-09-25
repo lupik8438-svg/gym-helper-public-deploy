@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard — Gym Helper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+    <div class="admin-shell">
+        <header class="admin-header"><a href="/" class="brand"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a><div><span class="admin-kicker">Owner workspace</span><h1>Панель прогресса</h1></div><a class="btn btn-outline btn-small" href="/">На сайт ↗</a></header>
+        <section id="loginCard" class="admin-login card"><span class="eyebrow">Закрытый раздел</span><h2>Дашборд владельца</h2><p>Здесь видны пользователи, активность и прогресс всей экосистемы.</p><p class="local-key-hint">Локальный ключ владельца: <code>1337</code></p><form id="loginForm"><label for="adminKey">Ключ администратора</label><input id="adminKey" type="password" autocomplete="current-password" placeholder="Введи ADMIN_KEY из .env" required><button class="btn btn-dark" type="submit">Открыть панель ↗</button></form><div id="loginError" class="admin-error"></div></section>
+        <main id="dashboard" class="admin-content hidden">
+            <div class="admin-toolbar"><div><span class="eyebrow">Сводка</span><h2>Что происходит в Gym Helper</h2></div><div class="toolbar-actions"><input id="searchInput" type="search" placeholder="Поиск по имени или Telegram ID"><select id="goalFilter"><option value="">Все цели</option><option value="lose_weight">Снижение веса</option><option value="maintain">Поддержание</option><option value="gain_muscle">Набор массы</option></select><button id="exportButton" class="btn btn-dark btn-small">Экспорт CSV ↓</button></div></div>
+            <div id="summaryCards" class="admin-stats"></div>
+            <section class="admin-grid"><article class="admin-panel card"><div class="panel-heading"><div><span class="eyebrow">12 месяцев</span><h3>Активность сообщества</h3></div></div><div class="admin-chart-wrap"><canvas id="activityChart"></canvas></div></article><article class="admin-panel card"><div class="panel-heading"><div><span class="eyebrow">Прогресс</span><h3>Лучшие результаты</h3></div></div><div id="topUsers" class="top-users"></div></article></section>
+            <section class="admin-panel card"><div class="panel-heading"><div><span class="eyebrow">CRM-слой</span><h3>Все пользователи</h3><p>Один список из Telegram, Mini App и сайта.</p></div><span id="usersCount" class="count-pill">0</span></div><div class="table-wrap"><table><thead><tr><th>Пользователь</th><th>Профиль</th><th>Цель</th><th>Вес</th><th>Прогресс</th><th>Активность</th><th>Занятия</th><th>События</th></tr></thead><tbody id="usersTable"></tbody></table></div></section>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script><script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

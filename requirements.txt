@@ -1,0 +1,10 @@
+aiogram==3.4.1
+aiohttp==3.9.3
+sqlalchemy==2.0.25
+python-dotenv==1.0.1
+pillow==10.2.0
+openai==1.12.0
+pydantic>=2.4.1,<2.6
+fastapi==0.109.2
+uvicorn==0.27.1
+jinja2==3.1.3

@@ -21,6 +21,11 @@ app = Flask(__name__)
 init_db()
 
 
+@app.route('/healthz')
+def healthz():
+    return jsonify({'ok': True, 'service': 'gym-helper-site'})
+
+
 @app.route('/')
 def index():
     return render_template('index.html')

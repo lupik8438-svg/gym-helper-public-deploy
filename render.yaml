@@ -1,18 +1,21 @@
-# Render Blueprint: one public website + one Telegram Mini App, sharing an isolated demo DB.
+# Render Blueprint: public site and Telegram Mini App with one isolated PostgreSQL database.
+# The bot can remain local initially; after deployment set WEBAPP_PUBLIC_URL to the Mini App URL
+# and restart the bot so its Telegram menu button points to the deployed app.
 services:
   - type: web
     name: gym-helper-public-site
     runtime: python
     plan: free
+    healthCheckPath: /healthz
     buildCommand: pip install -r requirements.txt -r website/requirements.txt
     startCommand: gunicorn --chdir website app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: gym-helper-demo-db
+          name: gym-helper-production-db
           property: connectionString
       - key: PUBLIC_DEMO_MODE
-        value: "True"
+        value: "False"
       - key: DEBUG
         value: "False"
       - key: ADMIN_KEY
@@ -28,12 +31,13 @@ services:
     name: gym-helper-mini-app
     runtime: python
     plan: free
+    healthCheckPath: /healthz
     buildCommand: pip install -r requirements.txt -r website/requirements.txt
     startCommand: gunicorn -k uvicorn.workers.UvicornWorker webapp.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: gym-helper-demo-db
+          name: gym-helper-production-db
           property: connectionString
       - key: DEBUG
         value: "False"
@@ -44,6 +48,6 @@ services:
       - key: OPENAI_API_KEY
         sync: false
 
- databases:
-  - name: gym-helper-demo-db
+databases:
+  - name: gym-helper-production-db
     plan: free
