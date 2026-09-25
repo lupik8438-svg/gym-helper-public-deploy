@@ -43,5 +43,6 @@ LocalTunnel подходит только для короткого теста. 
 ## Безопасность
 
 - В Render не загружай `.env` в репозиторий.
-- `BOT_TOKEN`, `OPENAI_API_KEY`, `ADMIN_KEY` и строка базы должны храниться только в Secrets/Environment Variables.
+- `BOT_TOKEN`, `DEEPSEEK_API_KEY`, `ADMIN_KEY` и строка базы должны храниться только в Secrets/Environment Variables.
+- `DEEPSEEK_API_KEY` нужен для текстовой генерации; распознавание изображений настраивается отдельно через vision-compatible API, потому что DeepSeek Chat не анализирует фото напрямую.
 - Owner Dashboard не включён в публичный демо-режим и требует ключ владельца в рабочем режиме.

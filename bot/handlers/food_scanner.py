@@ -60,7 +60,7 @@ async def process_food_photo(message: Message, state: FSMContext):
         # Конвертируем в PIL Image
         image = Image.open(BytesIO(photo_bytes.read()))
 
-        # Распознаем еду с помощью OpenAI Vision
+        # Распознаём еду через подключённый vision-сервис
         result = await recognize_food_from_image(image)
 
         if not result.get('success'):

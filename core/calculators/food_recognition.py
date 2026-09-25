@@ -3,15 +3,11 @@ import base64
 from io import BytesIO
 from typing import Dict, List
 from PIL import Image
-import openai
-from bot.config import OPENAI_API_KEY
-
-# Настройка OpenAI API
-openai.api_key = OPENAI_API_KEY
+from core.ai_provider import AIProviderError, chat_completion
 
 async def recognize_food_from_image(image: Image.Image) -> Dict:
     """
-    Распознать еду на фото используя OpenAI GPT-4 Vision API
+    Распознать еду на фото через DeepSeek Vision
 
     Args:
         image: PIL Image объект
@@ -23,7 +19,7 @@ async def recognize_food_from_image(image: Image.Image) -> Dict:
         # Конвертируем изображение в base64
         image_base64 = _image_to_base64(image)
 
-        # Промпт для GPT-4 Vision
+        # Промпт для vision-модели
         prompt = """Проанализируй это фото еды и предоставь детальную информацию:
 
 1. Определи ВСЕ продукты/блюда на фото
@@ -60,8 +56,8 @@ async def recognize_food_from_image(image: Image.Image) -> Dict:
 - Если не уверен в продукте - укажи низкую уверенность (confidence: "низкая")
 """
 
-        # Вызов OpenAI API
-        response = await _call_openai_vision(image_base64, prompt)
+        # Вызов DeepSeek Vision.
+        response = await _call_vision(image_base64, prompt)
 
         # Парсим ответ
         result = _parse_vision_response(response)
@@ -75,39 +71,23 @@ async def recognize_food_from_image(image: Image.Image) -> Dict:
             'message': 'Не удалось распознать еду на фото. Попробуйте сделать фото заново с лучшим освещением.'
         }
 
-async def _call_openai_vision(image_base64: str, prompt: str) -> str:
-    """Вызвать OpenAI GPT-4 Vision API"""
+async def _call_vision(image_base64: str, prompt: str) -> str:
+    """Call DeepSeek Vision without a vendor SDK."""
     try:
-        client = openai.AsyncOpenAI(api_key=OPENAI_API_KEY)
-
-        response = await client.chat.completions.create(
-            model="gpt-4-vision-preview",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_base64}",
-                                "detail": "high"
-                            }
-                        }
-                    ]
-                }
-            ],
-            max_tokens=1500,
-            temperature=0.3  # Низкая температура для более точных ответов
-        )
-
-        return response.choices[0].message.content
-
-    except Exception as e:
-        raise Exception(f"OpenAI API error: {str(e)}")
+        return await chat_completion([
+            {
+                'role': 'user',
+                'content': [
+                    {'type': 'text', 'text': prompt},
+                    {'type': 'image_url', 'image_url': {
+                        'url': f'data:image/jpeg;base64,{image_base64}',
+                        'detail': 'high',
+                    }},
+                ],
+            }
+        ], max_tokens=1500, temperature=0.3, vision=True)
+    except AIProviderError as error:
+        raise Exception(str(error)) from error
 
 def _image_to_base64(image: Image.Image) -> str:
     """Конвертировать PIL Image в base64"""
@@ -123,7 +103,7 @@ def _image_to_base64(image: Image.Image) -> str:
     return base64.b64encode(img_bytes).decode('utf-8')
 
 def _parse_vision_response(response: str) -> Dict:
-    """Парсинг ответа от GPT-4 Vision"""
+    """Парсинг ответа от vision-модели"""
     import json
     import re
 

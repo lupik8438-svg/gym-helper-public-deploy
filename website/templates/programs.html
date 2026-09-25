@@ -4,7 +4,14 @@
 <title>Планы тренировок — Gym Helper</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
 </head><body>
-<header class="site-header"><a href="/" class="brand"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a><nav class="main-nav"><a href="/" class="nav-link">Главная</a><a href="/calculator" class="nav-link">Калькуляторы</a><a href="/food-scanner" class="nav-link">Сканер еды</a><a href="/programs" class="nav-link active">Тренировки</a><a href="/user-progress" class="nav-link">Прогресс</a></nav><button class="theme-toggle header-action" id="themeToggle" type="button" aria-label="Переключить тему">🌙</button></header>
+<header class="site-header"><a href="/" class="brand"><span class="brand-mark">✦</span><span class="brand-name">Gym <span>Helper</span></span></a><nav class="main-nav" aria-label="Основная навигация">
+            <a href="/" class="nav-link">Главная</a>
+            <a href="/calculator" class="nav-link">Калькуляторы</a>
+            <a href="/food-scanner" class="nav-link">Сканер еды</a>
+            <a href="/user-progress" class="nav-link">Прогресс</a>
+            <a href="/programs" class="nav-link active">Тренировки</a>
+            <a href="/login" class="nav-link">Войти</a>
+        </nav><button class="theme-toggle header-action" id="themeToggle" type="button" aria-label="Переключить тему">🌙</button></header>
 <div class="container"><main><section class="page-hero"><span class="eyebrow">Планируй в своём ритме</span><h1>Популярные схемы тренировок</h1><p>Выбери основу под свой график. Начинай с комфортной нагрузки, осваивай технику и оставляй время на восстановление.</p></section><div class="program-grid" id="programGrid"><div class="loading">Загружаю программы…</div></div><aside class="training-note"><strong>Важно</strong><p>Это общие примеры, не индивидуальный план. Подбирай нагрузку по уровню подготовки. При боли, хронических заболеваниях или после травмы обсуди тренировки со специалистом.</p></aside></main><footer class="site-footer"><p>Gym Helper · тренировки и активность</p><div class="footer-links"><a href="/user-progress">Мой прогресс</a><a href="/admin">Для владельца →</a></div></footer></div>
 <script src="{{ url_for('static', filename='js/app.js') }}"></script><script src="{{ url_for('static', filename='js/programs.js') }}"></script>
 </body></html>

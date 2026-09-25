@@ -14,8 +14,12 @@ DATABASE_URL = os.getenv('DATABASE_URL', f'sqlite:///{_default_db}')
 if DATABASE_URL.startswith('sqlite:///./'):
     DATABASE_URL = f"sqlite:///{_project_root / DATABASE_URL.replace('sqlite:///./', '')}"
 
-# OpenAI
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+# DeepSeek AI for text and food-photo analysis.
+DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', '').strip()
+DEEPSEEK_API_URL = os.getenv('DEEPSEEK_API_URL', 'https://api.deepseek.com/chat/completions').strip()
+DEEPSEEK_TEXT_MODEL = os.getenv('DEEPSEEK_TEXT_MODEL', 'deepseek-chat').strip()
+DEEPSEEK_VISION_MODEL = os.getenv('DEEPSEEK_VISION_MODEL', 'deepseek-flash').strip()
+AI_REQUEST_TIMEOUT = int(os.getenv('AI_REQUEST_TIMEOUT', '60'))
 
 # Web App
 # WEBAPP_URL is local URL for browser development. Telegram requires WEBAPP_PUBLIC_URL.

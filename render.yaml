@@ -26,8 +26,14 @@ services:
         generateValue: true
       - key: BOT_TOKEN
         sync: false
-      - key: OPENAI_API_KEY
+      - key: DEEPSEEK_API_KEY
         sync: false
+      - key: DEEPSEEK_API_URL
+        value: "https://api.deepseek.com/chat/completions"
+      - key: DEEPSEEK_TEXT_MODEL
+        value: "deepseek-chat"
+      - key: DEEPSEEK_VISION_MODEL
+        value: "deepseek-flash"
 
   - type: web
     name: gym-helper-mini-app
@@ -51,8 +57,14 @@ services:
         value: "https://gym-helper-public-site.onrender.com"
       - key: BOT_TOKEN
         sync: false
-      - key: OPENAI_API_KEY
+      - key: DEEPSEEK_API_KEY
         sync: false
+      - key: DEEPSEEK_API_URL
+        value: "https://api.deepseek.com/chat/completions"
+      - key: DEEPSEEK_TEXT_MODEL
+        value: "deepseek-chat"
+      - key: DEEPSEEK_VISION_MODEL
+        value: "deepseek-flash"
 
 databases:
   - name: gym-helper-production-db

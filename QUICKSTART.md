@@ -8,13 +8,16 @@ pip install -r requirements.txt
 
 ## Шаг 2: Настройка .env
 
-Откройте файл `.env` и добавьте свой OpenAI API ключ:
+Для AI-функций и сканирования еды используется DeepSeek:
 
 ```env
-OPENAI_API_KEY=sk-your-actual-openai-api-key-here
+DEEPSEEK_API_KEY=your_deepseek_key
+DEEPSEEK_API_URL=https://api.deepseek.com/chat/completions
+DEEPSEEK_TEXT_MODEL=deepseek-chat
+DEEPSEEK_VISION_MODEL=deepseek-flash
 ```
 
-Получить ключ: https://platform.openai.com/api-keys
+Ключ создаётся в кабинете DeepSeek. Один ключ используется для текста и фотографий.
 
 ## Шаг 3: Проверка
 
@@ -79,8 +82,7 @@ python main.py
 - `pip install -r requirements.txt`
 
 **Сканирование не работает:**
-- Добавьте OPENAI_API_KEY в .env
-- Проверьте баланс на platform.openai.com
+- Проверь `DEEPSEEK_API_KEY` и модель `DEEPSEEK_VISION_MODEL=deepseek-flash`
 
 **База данных:**
 - Создается автоматически при первом запуске

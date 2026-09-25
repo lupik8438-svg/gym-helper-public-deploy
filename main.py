@@ -3,7 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-from aiogram.types import MenuButtonWebApp, WebAppInfo
+from aiogram.types import MenuButtonDefault, MenuButtonWebApp, WebAppInfo
 
 from bot.config import BOT_TOKEN, WEBAPP_PUBLIC_URL
 from database.connection import init_db
@@ -69,7 +69,13 @@ async def main():
         except Exception as error:
             logger.warning("Не удалось установить кнопку Mini App: %s", error)
     else:
-        logger.warning("WEBAPP_PUBLIC_URL не настроен: Telegram не сможет открыть localhost")
+        # Never leave a dead LocalTunnel URL in Telegram. Reset the chat menu until
+        # a stable HTTPS Mini App URL is configured in the environment.
+        try:
+            await bot.set_chat_menu_button(menu_button=MenuButtonDefault())
+            logger.warning("WEBAPP_PUBLIC_URL не настроен: старая кнопка Mini App сброшена")
+        except Exception as error:
+            logger.warning("Не удалось сбросить кнопку Mini App: %s", error)
 
     # Запуск
     # Keep Telegram's command menu visible on mobile clients.

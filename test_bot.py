@@ -17,8 +17,8 @@ def check_imports():
         import sqlalchemy
         print("✅ sqlalchemy")
 
-        import openai
-        print("✅ openai")
+        import aiohttp
+        print("✅ aiohttp / AI provider HTTP client")
 
         from PIL import Image
         print("✅ Pillow")
@@ -27,7 +27,7 @@ def check_imports():
         print("✅ python-dotenv")
 
         # Проверка модулей бота
-        from bot.config import BOT_TOKEN, OPENAI_API_KEY
+        from bot.config import BOT_TOKEN, DEEPSEEK_API_KEY
         print("✅ bot.config")
 
         from database.models import User, Profile, WeightHistory, FoodLog
@@ -65,7 +65,7 @@ def check_config():
     """Проверка конфигурации"""
     print("🔍 Проверка конфигурации...")
 
-    from bot.config import BOT_TOKEN, OPENAI_API_KEY, DATABASE_URL
+    from bot.config import BOT_TOKEN, DEEPSEEK_API_KEY, DATABASE_URL
 
     if not BOT_TOKEN:
         print("❌ BOT_TOKEN не установлен в .env")
@@ -73,10 +73,10 @@ def check_config():
     else:
         print(f"✅ BOT_TOKEN установлен ({BOT_TOKEN[:10]}...)")
 
-    if not OPENAI_API_KEY:
-        print("⚠️  OPENAI_API_KEY не установлен (сканирование еды не будет работать)")
+    if not DEEPSEEK_API_KEY:
+        print("⚠️  DEEPSEEK_API_KEY не установлен (текстовые AI-функции отключены)")
     else:
-        print(f"✅ OPENAI_API_KEY установлен ({OPENAI_API_KEY[:10]}...)")
+        print("✅ DEEPSEEK_API_KEY установлен")
 
     print(f"✅ DATABASE_URL: {DATABASE_URL}")
 
